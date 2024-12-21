@@ -23,6 +23,7 @@ jobs:
     # Run configure.sh script
     - name: Run configure script
       run: |
+        chmod +x ${PWD}/.github/workflows/configure.sh
         ${PWD}/.github/workflows/configure.sh
 
     - name: Build with Make
