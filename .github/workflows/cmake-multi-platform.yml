@@ -33,7 +33,6 @@ jobs:
           - os: ubuntu-latest
             c_compiler: cl
 
-      # This ensures that the matrix will fail fast if any job fails
       fail-fast: true
 
     steps:
@@ -46,17 +45,18 @@ jobs:
         ./vcpkg/bootstrap-vcpkg.sh
         echo "VCPKG_ROOT=${{ github.workspace }}/vcpkg" >> $GITHUB_ENV
 
-    # Install dependencies using vcpkg
+    # Install dependencies using vcpkg (Linux)
     - name: Install dependencies using vcpkg (Linux)
       if: runner.os == 'Linux'
       run: |
         ${{ github.workspace }}/vcpkg/vcpkg install fltk portaudio
 
+    # Install dependencies using vcpkg (Windows)
     - name: Install dependencies using vcpkg (Windows)
       if: runner.os == 'Windows'
       run: |
         cd ${{ github.workspace }}/vcpkg
-        .\vcpkg install fltk portaudio
+        .\vcpkg.bat install fltk portaudio
 
     # Set reusable strings
     - name: Set reusable strings
