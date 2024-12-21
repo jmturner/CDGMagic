@@ -1,4 +1,4 @@
-name: CMake with vcpkg
+name: CMake with vcpkg (GCC only)
 
 on:
   push:
@@ -14,42 +14,34 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
         build_type: [Release]
-        c_compiler: [gcc, clang, cl]
-        include:
-          - os: windows-latest
-            c_compiler: cl
-            cpp_compiler: cl
-          - os: ubuntu-latest
-            c_compiler: gcc
-            cpp_compiler: g++
-          - os: ubuntu-latest
-            c_compiler: clang
-            cpp_compiler: clang++
-        exclude:
-          - os: windows-latest
-            c_compiler: gcc
-          - os: windows-latest
-            c_compiler: clang
-          - os: ubuntu-latest
-            c_compiler: cl
+        c_compiler: [gcc]
+        cpp_compiler: [g++]
 
       fail-fast: true
 
     steps:
     - uses: actions/checkout@v4
 
-    # Install dependencies (vcpkg)
+    # Install vcpkg
     - name: Install vcpkg
       run: |
         git clone https://github.com/microsoft/vcpkg.git
-        ./vcpkg/bootstrap-vcpkg.sh
-        echo "VCPKG_ROOT=${{ github.workspace }}/vcpkg" >> $GITHUB_ENV
+        # Bootstrapping vcpkg for Linux
+        if [ $RUNNER_OS == 'Linux' ]; then
+          ./vcpkg/bootstrap-vcpkg.sh
+          echo "${{ github.workspace }}/vcpkg" >> $GITHUB_PATH  # Add vcpkg to PATH
+        fi
+        # Bootstrapping vcpkg for Windows
+        if [ $RUNNER_OS == 'Windows' ]; then
+          .\vcpkg\bootstrap-vcpkg.bat
+          echo "${{ github.workspace }}\\vcpkg" >> $GITHUB_PATH  # Add vcpkg to PATH
+        fi
 
     # Install dependencies using vcpkg (Linux)
     - name: Install dependencies using vcpkg (Linux)
       if: runner.os == 'Linux'
       run: |
-        ${{ github.workspace }}/vcpkg/vcpkg install fltk portaudio
+        vcpkg install fltk portaudio
 
     # Install dependencies using vcpkg (Windows)
     - name: Install dependencies using vcpkg (Windows)
