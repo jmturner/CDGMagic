@@ -7,9 +7,47 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
+  install-linux:
+    runs-on: ubuntu-latest
 
+    steps:
+    - uses: actions/checkout@v4
+
+    # Install vcpkg for Linux
+    - name: Install vcpkg for Linux
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git
+        ./vcpkg/bootstrap-vcpkg.sh
+        echo "${{ github.workspace }}/vcpkg" >> $GITHUB_PATH  # Add vcpkg to PATH
+
+    # Install dependencies using vcpkg (Linux)
+    - name: Install dependencies using vcpkg (Linux)
+      run: |
+        vcpkg install fltk portaudio
+
+  install-windows:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    # Install vcpkg for Windows
+    - name: Install vcpkg for Windows
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git
+        .\vcpkg\bootstrap-vcpkg.bat
+        echo "${{ github.workspace }}\\vcpkg" >> $env:GITHUB_PATH  # Add vcpkg to PATH
+
+    # Install dependencies using vcpkg (Windows)
+    - name: Install dependencies using vcpkg (Windows)
+      run: |
+        cd ${{ github.workspace }}/vcpkg
+        .\vcpkg.bat install fltk portaudio
+
+  build:
+    needs: [install-linux, install-windows]
+    runs-on: ${{ matrix.os }}
+    
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -17,38 +55,8 @@ jobs:
         c_compiler: [gcc]
         cpp_compiler: [g++]
 
-      fail-fast: true
-
     steps:
     - uses: actions/checkout@v4
-
-    # Install vcpkg
-    - name: Install vcpkg
-      run: |
-        git clone https://github.com/microsoft/vcpkg.git
-        # Bootstrapping vcpkg for Linux
-        if [ $RUNNER_OS == 'Linux' ]; then
-          ./vcpkg/bootstrap-vcpkg.sh
-          echo "${{ github.workspace }}/vcpkg" >> $GITHUB_PATH  # Add vcpkg to PATH
-        fi
-        # Bootstrapping vcpkg for Windows
-        if [ $RUNNER_OS == 'Windows' ]; then
-          .\vcpkg\bootstrap-vcpkg.bat
-          echo "${{ github.workspace }}\\vcpkg" >> $GITHUB_PATH  # Add vcpkg to PATH
-        fi
-
-    # Install dependencies using vcpkg (Linux)
-    - name: Install dependencies using vcpkg (Linux)
-      if: runner.os == 'Linux'
-      run: |
-        vcpkg install fltk portaudio
-
-    # Install dependencies using vcpkg (Windows)
-    - name: Install dependencies using vcpkg (Windows)
-      if: runner.os == 'Windows'
-      run: |
-        cd ${{ github.workspace }}/vcpkg
-        .\vcpkg.bat install fltk portaudio
 
     # Set reusable strings
     - name: Set reusable strings
