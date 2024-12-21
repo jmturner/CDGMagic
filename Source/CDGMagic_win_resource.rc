@@ -1,0 +1,50 @@
+/*
+ *  This file is part of CD+Graphics Magic.
+ *
+ *  CD+Graphics Magic is free software: you can redistribute it and/or
+ *  modify it under the terms of the GNU General Public License as
+ *  published by the Free Software Foundation, either version 2 of the
+ *  License, or (at your option) any later version.
+ *
+ *  CD+Graphics Magic is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with CD+Graphics Magic. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+// Modified from original Dev-Cpp resource file for use with Code::Blocks.
+
+#include <windows.h>
+
+500 ICON MOVEABLE PURE LOADONCALL DISCARDABLE "CDGMagic_win_icon.ico"
+
+1 VERSIONINFO
+FILEVERSION 0,0,0,1
+PRODUCTVERSION 0,0,0,1
+FILETYPE VFT_APP
+{
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "040904E4"
+        {
+            VALUE "CompanyName", "http://cdgmagic.sourceforge.net/"
+            VALUE "FileVersion", "0.0.0.1b"
+            VALUE "FileDescription", "Compact Disc Subcode Graphics Editor"
+            VALUE "InternalName", "CDGMagic"
+            VALUE "LegalCopyright", "GPL v2 (or later)"
+            VALUE "LegalTrademarks", ""
+            VALUE "OriginalFilename", "CDG_Magic.exe"
+            VALUE "ProductName", "CD+Graphics Magic"
+            VALUE "ProductVersion", "EXPERIMENTAL 001b"
+        }
+    }
+
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x0409, 1252
+    }
+}
