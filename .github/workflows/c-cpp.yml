@@ -12,25 +12,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    
-    # Install dependencies
-    - name: Install FLTK and PortAudio
+    - name: Check out code
+      uses: actions/checkout@v4
+
+    # Install FLTK and PortAudio
+    - name: Install Dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y libfltk1.3-dev portaudio19-dev pkg-config
 
-    # Run configure.sh script
+    # Make configure.sh executable and run it
     - name: Run configure script
       run: |
         chmod +x ${PWD}/.github/workflows/configure.sh
         ${PWD}/.github/workflows/configure.sh
 
+    # Build the project
     - name: Build with Make
       run: make
 
+    # Run tests
     - name: Run tests
       run: make check
 
+    # Distribution check
     - name: Make distcheck
       run: make distcheck
