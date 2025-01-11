@@ -1,0 +1,6 @@
+[submodule "submodules/fltk"]
+	path = submodules/fltk
+	url = https://github.com/fltk/fltk.git
+[submodule "submodules/portaudio"]
+	path = submodules/portaudio
+	url = https://github.com/PortAudio/portaudio.git
