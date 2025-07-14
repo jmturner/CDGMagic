@@ -141,19 +141,21 @@ void CDGMagic_EditingGroup::RecalculatePreview_callback(Fl_Widget *CallingWidget
     editing_lanes->redraw();
 }
 
-int CDGMagic_EditingGroup::delete_clip(CDGMagic_MediaClip *the_clip)
+int CDGMagic_EditingGroup::delete_clip(CDGMagic_MediaClip* the_clip)
 {
-    printf("CDGMagic_EditingGroup::delete_clip - ");
-    for (unsigned int iter = 0; iter < TimeLine_Deque->size(); iter++)
+    printf( "CDGMagic_EditingGroup::delete_clip - ");
+
+    for (size_t iter = 0; iter < TimeLine_Deque->size(); ++iter)
     {
         if (TimeLine_Deque->at(iter) == the_clip)
         {
-            printf("Deleting %u at position %i.\n", (unsigned int)TimeLine_Deque->at(iter), iter);
-            TimeLine_Deque->erase(TimeLine_Deque->begin()+iter);
+            printf("Deleting clip at position %i .\n", iter);
+            TimeLine_Deque->erase(TimeLine_Deque->begin() + iter);
             return 1;
-        };
-    };
-    printf("Could not find %u!\n", (unsigned int)the_clip);
+        }
+    }
+
+    printf("Could not find clip!\n");
     return 0;
 }
 
@@ -648,7 +650,9 @@ void CDGMagic_EditingGroup::DoProjectOpen_callback(Fl_Widget *CallingWidget)
                 // Fire the callback to update various stuff.
                 //current_clip->do_callback();
                 // Add the clip to the deque of timeline clips.
+                //REMOVE
                 printf("CDGMagic_EditingGroup::AddBMP_callback - s: %i, events: %i\n", current_clip->start_pack(), current_clip->event_queue()->size() );
+                //printf("CDGMagic_EditingGroup::AddBMP_callback - s: %d, events: %zu\n", current_clip->start_pack(), current_clip->event_queue()->size());
                 TimeLine_Deque->push_back(current_clip);
                 continue;
             };

@@ -847,19 +847,44 @@ int CDGMagic_TextClip_Window::get_draw_time(int requested_type, int requested_li
     return -1;
 }
 
+//REMOVE
+//void CDGMagic_TextClip_Window::DoPageChange_callback(Fl_Counter *CallingWidget)
+//{
+//    // Make sure we have at least one clip loaded.
+//    if (current_clip->event_queue()->size() < 1)  { printf("Could not change page, event_queue()->size() was %i\n", current_clip->event_queue()->size() ); return; };
+//    // Get the requested page number.
+//    current_page = static_cast<int>( CallingWidget->value() ) - 1;
+//    // Set it to the last available image if we would run past the buffer.
+//    if ( current_page >= current_clip->event_queue()->size() )  { current_page = current_clip->event_queue()->size()-1; };
+//    // Set the page.
+//    CallingWidget->value( current_page+1 );
+//    // Reload the current values.
+//    update_current_values();
+//}
 void CDGMagic_TextClip_Window::DoPageChange_callback(Fl_Counter *CallingWidget)
 {
     // Make sure we have at least one clip loaded.
-    if (current_clip->event_queue()->size() < 1)  { printf("Could not change page, event_queue()->size() was %i\n", current_clip->event_queue()->size() ); return; };
+    int queue_size = static_cast<int>(current_clip->event_queue()->size());
+    if (queue_size < 1) {
+        printf("Could not change page, event_queue()->size() was %d\n", queue_size);
+        return;
+    }
+
     // Get the requested page number.
-    current_page = static_cast<int>( CallingWidget->value() ) - 1;
-    // Set it to the last available image if we would run past the buffer.
-    if ( current_page >= current_clip->event_queue()->size() )  { current_page = current_clip->event_queue()->size()-1; };
-    // Set the page.
-    CallingWidget->value( current_page+1 );
+    current_page = static_cast<int>(CallingWidget->value()) - 1;
+
+    // Set to last available image if out of bounds.
+    if (current_page >= queue_size) {
+        current_page = queue_size - 1;
+    }
+
+    // Update widget value (1-based).
+    CallingWidget->value(current_page + 1);
+
     // Reload the current values.
     update_current_values();
 }
+
 
 unsigned long CDGMagic_TextClip_Window::get_embedded_palette_color(unsigned char requested_palette, unsigned char requested_index)
 {

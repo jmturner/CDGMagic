@@ -68,7 +68,7 @@ void CDGMagic_ScrollClip::add_bmp_file()
     file_chooser.filter("Bitmap Image (*.bmp)\t*.bmp");
 #else    // The parenthesis somehow break the non-Windows native file choosers?!...
     file_chooser.filter("Bitmap Image\t*.bmp\n");
-#endifv
+#endif
     file_chooser.show();
     // Returns NULL if the hit cancel, so don't even attempt to make BitMap object in that case.
     if (file_chooser.count() != 1) { return; };
