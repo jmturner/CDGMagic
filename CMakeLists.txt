@@ -2,7 +2,15 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Define the project name and version
-project(MyProject VERSION 1.0 LANGUAGES CXX)
+project(CDGMagic VERSION 1.0 LANGUAGES CXX)
+
+# Set version string
+add_definitions(-DCDGMAGIC_APP_VERSION_STRING="CD+Graphics Magic EXPERIMENTAL ${PROJECT_VERSION}")
+add_definitions(-DMAX_PATH=8192)
+add_definitions(-D_CDGMAGIC_NOLANESHANDLEREDRAW_)
+add_definitions(-D_CDGMAGIC_USEPCLINUXAUDIO_)
+
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
 
 # Set the C++ standard to use
 set(CMAKE_CXX_STANDARD 11)
@@ -22,11 +30,8 @@ endif()
 # Add the include directory where your source files are
 include_directories(${PROJECT_SOURCE_DIR})
 
-# Add your project source files (you can add more .cpp files here)
-set(SOURCES
-    main.cpp
-    utils.cpp
-)
+file(GLOB HEADERS Source/*.h)
+file(GLOB SOURCES Source/*.cpp)
 
 # Create the executable for your project
 add_executable(${PROJECT_NAME} ${SOURCES})
@@ -47,6 +52,8 @@ elseif(UNIX)
     # Unix-specific configurations (e.g., enable pthreads)
     find_package(Threads REQUIRED)
     target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
+    find_package(X11 REQUIRED)
+    target_link_libraries(${PROJECT_NAME} PRIVATE X11)
 endif()
 
 # Print a summary message with build information

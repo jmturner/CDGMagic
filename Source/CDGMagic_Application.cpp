@@ -158,15 +158,43 @@ void CDGMagic_Application::bmp_to_transition_callback(Fl_Widget *CallingWidget, 
     // Make sure file doesn't exist (by checking attributes)!.
     struct stat statFileInfo;  // File info for attributes.
     int stat_err = stat( save_path_string.c_str(), &statFileInfo );
-    if ((stat_err != -1) || (errno != ENOENT))
-    {
-        std::string save_prompt_string("The requested file already exists:\n");
-        save_prompt_string.append(save_path_string);
-        save_prompt_string.append("\n\nAre you SURE you want to OVERWRITE it?");
-        int user_choice = fl_choice(save_prompt_string.c_str(), "Yes, OVERWRITE file with new data.", "No, don't overwrite.", NULL);
-        // Check the return value, and return if they don't want to overwrite.
-        if (user_choice == 1)  { return; };
-    };
+
+    //REMOVE
+    //if ((stat_err != -1) || (errno != ENOENT))
+    //{
+    //    std::string save_prompt_string("The requested file already exists:\n");
+    //    save_prompt_string.append(save_path_string);
+    //    save_prompt_string.append("\n\nAre you SURE you want to OVERWRITE it?");
+    //    int user_choice = fl_choice(save_prompt_string.c_str(), "Yes, OVERWRITE file with new data.", "No, don't overwrite.", NULL);
+    //    // Check the return value, and return if they don't want to overwrite.
+    //    if (user_choice == 1)  { return; };
+    //};
+    if ((stat_err != -1) || (errno != ENOENT)) {
+         const char* prompt_format = "%s";
+         std::string save_prompt_string = 
+             "The requested file already exists:\n" + 
+             save_path_string +
+             "\n\nAre you SURE you want to OVERWRITE it?";
+         int user_choice = fl_choice(
+           prompt_format,
+           "Yes, OVERWRITE file with new data.",
+           "No, don't overwrite.",
+           nullptr,
+           save_prompt_string.c_str()  // used as the `%s` argument
+
+//         int user_choice = fl_choice(
+//             save_prompt_string.c_str(),
+//             "Yes, OVERWRITE file with new data.",
+//             "No, don't overwrite.",
+//             nullptr
+         );
+
+    // Check the return value: 1 = No, don't overwrite
+    if (user_choice == 1) {
+        return;
+    }
+}
+
 
     FILE *Transition_File = fopen( save_path_string.c_str(), "wb");
     if ( Transition_File == NULL )
